@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
 	"net/smtp"
 	"os"
