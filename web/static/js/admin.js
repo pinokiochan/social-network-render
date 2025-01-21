@@ -1,5 +1,5 @@
 // Admin token management
-export default class AdminAuth {
+class AdminAuth {
     static TOKEN_KEY = 'adminToken';
 
     static getToken() {
@@ -34,7 +34,8 @@ class AdminAPI {
             ...options,
             headers: {
                 ...options.headers,
-                'Authorization': token,
+                'Authorization': `Bearer ${token}`,
+
                 'Content-Type': 'application/json',
             }
         });

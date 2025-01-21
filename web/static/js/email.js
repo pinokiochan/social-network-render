@@ -1,5 +1,3 @@
-import AdminAuth from './admin.js'; // Укажите правильный путь к файлу
-
 document.getElementById('emailForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -10,8 +8,10 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
 
     // Получаем токен через AdminAuth
     const token = AdminAuth.getToken();
+
     if (!token) {
-        alert('Токен не найден! Убедитесь, что вы вошли в систему.');
+        console.error('Token not found');
+        alert('You are not authorized. Please log in first.');
         return;
     }
 
@@ -19,7 +19,7 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         const response = await fetch('https://social-network-2.onrender.com/api/admin/broadcast-to-selected', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`, // Передаём токен в заголовок
+                'Authorization': `Bearer ${token}`, // Используем токен из AdminAuth
             },
             body: formData,
         });
