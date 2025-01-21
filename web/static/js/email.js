@@ -6,12 +6,11 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
     formData.delete('users');
     users.forEach(user => formData.append('users[]', user));
 
-    // Получаем токен через AdminAuth
-    const token = AdminAuth.getToken();
+    // Get the JWT token from localStorage
+    const token = localStorage.getItem('token');  // Make sure you have stored the token previously
 
     if (!token) {
-        console.error('Token not found');
-        alert('You are not authorized. Please log in first.');
+        alert('No token found, please login again.');
         return;
     }
 
@@ -19,7 +18,7 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         const response = await fetch('https://social-network-2.onrender.com/api/admin/broadcast-to-selected', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`, // Используем токен из AdminAuth
+                'Authorization': `Bearer ${token}`,  // Use thdee JWT token from localStorage
             },
             body: formData,
         });
@@ -29,9 +28,11 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             alert('Emails sent successfully!');
         } else {
+            // Handle the error response
             alert(`Failed to send emails: ${result.message}`);
         }
     } catch (err) {
+        // Catch and log any errors in the request or response
         console.error('Error sending emails:', err);
         alert('An error occurred. Please try again.');
     }
