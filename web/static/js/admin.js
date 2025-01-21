@@ -1,5 +1,5 @@
 // Admin token management
-class AdminAuth {
+export default class AdminAuth {
     static TOKEN_KEY = 'adminToken';
 
     static getToken() {

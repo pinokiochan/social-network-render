@@ -1,3 +1,5 @@
+import AdminAuth from './admin.js'; // Укажите правильный путь к файлу
+
 document.getElementById('emailForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -6,11 +8,18 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
     formData.delete('users');
     users.forEach(user => formData.append('users[]', user));
 
+    // Получаем токен через AdminAuth
+    const token = AdminAuth.getToken();
+    if (!token) {
+        alert('Токен не найден! Убедитесь, что вы вошли в систему.');
+        return;
+    }
+
     try {
         const response = await fetch('https://social-network-2.onrender.com/api/admin/broadcast-to-selected', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer YOUR_JWT_TOKEN', // Replace with the actual token
+                'Authorization': `Bearer ${token}`, // Передаём токен в заголовок
             },
             body: formData,
         });
@@ -20,11 +29,9 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             alert('Emails sent successfully!');
         } else {
-            // Handle the error response
             alert(`Failed to send emails: ${result.message}`);
         }
     } catch (err) {
-        // Catch and log any errors in the request or response
         console.error('Error sending emails:', err);
         alert('An error occurred. Please try again.');
     }
