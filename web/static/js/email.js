@@ -10,7 +10,7 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
         const response = await fetch('https://social-network-2.onrender.com/api/admin/broadcast-to-selected', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer YOUR_JWT_TOKEN', // Replace with the actual token
+                'Authorization': token, // Replace with the actual token
             },
             body: formData,
         });
