@@ -5,18 +5,12 @@ document.getElementById('emailForm').addEventListener('submit', async (e) => {
     const users = formData.get('users').split(',').map(email => email.trim());
     formData.delete('users');
     users.forEach(user => formData.append('users[]', user));
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('No token found');
-        showAuthForms();
-        return;
-    }
 
     try {
         const response = await fetch('https://social-network-2.onrender.com/api/admin/broadcast-to-selected', {
             method: 'POST',
             headers: {
-                'Authorization': token, // Replace with the actual token
+                'Authorization': 'Bearer YOUR_JWT_TOKEN', // Replace with the actual token
             },
             body: formData,
         });
