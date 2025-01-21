@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"github.com/pinokiochan/social-network/internal/models"
-	"github.com/pinokiochan/social-network/internal/middleware"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/models"
+	"github.com/pinokiochan/social-network-render/internal/middleware"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
 	"database/sql"
 )

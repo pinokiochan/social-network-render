@@ -1,4 +1,4 @@
-module github.com/pinokiochan/social-network
+module github.com/pinokiochan/social-network-render
 
 go 1.16
 

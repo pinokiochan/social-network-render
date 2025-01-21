@@ -3,7 +3,7 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
 )
 

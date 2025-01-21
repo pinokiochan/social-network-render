@@ -3,9 +3,9 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/pinokiochan/social-network/internal/middleware"
-	"github.com/pinokiochan/social-network/internal/models"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/middleware"
+	"github.com/pinokiochan/social-network-render/internal/models"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )

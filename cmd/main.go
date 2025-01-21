@@ -9,10 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/pinokiochan/social-network/internal/database"
-	"github.com/pinokiochan/social-network/internal/handlers"
-	"github.com/pinokiochan/social-network/internal/logger"
-	"github.com/pinokiochan/social-network/internal/middleware"
+	"github.com/pinokiochan/social-network-render/internal/database"
+	"github.com/pinokiochan/social-network-render/internal/handlers"
+	"github.com/pinokiochan/social-network-render/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/middleware"
 	"github.com/sirupsen/logrus"
 )
 

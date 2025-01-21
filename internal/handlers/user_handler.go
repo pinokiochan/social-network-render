@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/pinokiochan/social-network/internal/models"
-	"github.com/pinokiochan/social-network/internal/auth"
-	"github.com/pinokiochan/social-network/internal/utils"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/models"
+	"github.com/pinokiochan/social-network-render/internal/auth"
+	"github.com/pinokiochan/social-network-render/internal/utils"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"database/sql"
 	"github.com/sirupsen/logrus"
 )

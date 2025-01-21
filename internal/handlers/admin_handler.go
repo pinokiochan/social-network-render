@@ -9,9 +9,9 @@ import (
 	"os"
 	"io"
 	"path/filepath"
-	"github.com/pinokiochan/social-network/internal/models"
-	"github.com/pinokiochan/social-network/internal/utils"
-	"github.com/pinokiochan/social-network/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/models"
+	"github.com/pinokiochan/social-network-render/internal/utils"
+	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
 )
 
