@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/pinokiochan/social-network/internal/database"
+	"github.com/pinokiochan/social-network-render/internal/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
