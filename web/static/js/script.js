@@ -178,7 +178,7 @@ async function createPost(event) {
     }
 
     try {
-        const response = await fetch('https://social-network-2.onrender.com/posts/create', {
+        const response = await fetch('https://social-network-2.onrender.com/api/posts/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
