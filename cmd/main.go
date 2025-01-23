@@ -11,8 +11,9 @@ import (
 
 	"github.com/pinokiochan/social-network-render/internal/database"
 	"github.com/pinokiochan/social-network-render/internal/handlers"
-	"github.com/pinokiochan/social-network-render/internal/logger"
+	"github.com/pinokiochan/social-network-render/internal/logger" // Импортируем пакет logger
 	"github.com/pinokiochan/social-network-render/internal/middleware"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -64,15 +65,16 @@ func main() {
 	// Настройка API-роутов
 	mux.HandleFunc("/api/register", userHandler.Register)
 	mux.HandleFunc("/api/login", userHandler.Login)
-	mux.HandleFunc("/api/users", middleware.JWT(userHandler.GetUsers))
-	mux.HandleFunc("/api/posts", middleware.JWT(postHandler.GetPosts))
-	mux.HandleFunc("/api/posts/create", middleware.JWT(postHandler.CreatePost))
-	mux.HandleFunc("/api/posts/update", middleware.JWT(postHandler.UpdatePost))
-	mux.HandleFunc("/api/posts/delete", middleware.JWT(postHandler.DeletePost))
-	mux.HandleFunc("/api/comments", middleware.JWT(commentHandler.GetComments))
-	mux.HandleFunc("/api/comments/create", middleware.JWT(commentHandler.CreateComment))
-	mux.HandleFunc("/api/comments/update", middleware.JWT(commentHandler.UpdateComment))
-	mux.HandleFunc("/api/comments/delete", middleware.JWT(commentHandler.DeleteComment))
+	mux.HandleFunc("/api/verify", userHandler.Verify)
+	mux.HandleFunc("/api/index/users", middleware.JWT(userHandler.GetUsers))
+	mux.HandleFunc("/api/index/posts", middleware.JWT(postHandler.GetPosts))
+	mux.HandleFunc("/api/index/posts/create", middleware.JWT(postHandler.CreatePost))
+	mux.HandleFunc("/api/index/posts/update", middleware.JWT(postHandler.UpdatePost))
+	mux.HandleFunc("/api/index/posts/delete", middleware.JWT(postHandler.DeletePost))
+	mux.HandleFunc("/api/index/comments", middleware.JWT(commentHandler.GetComments))
+	mux.HandleFunc("/api/index/comments/create", middleware.JWT(commentHandler.CreateComment))
+	mux.HandleFunc("/api/index/comments/update", middleware.JWT(commentHandler.UpdateComment))
+	mux.HandleFunc("/api/index/comments/delete", middleware.JWT(commentHandler.DeleteComment))
 
 	// Админ-роуты (ограничены пользователями с правами администратора)
 	mux.HandleFunc("/admin", handlers.ServeAdminHTML)
@@ -82,9 +84,16 @@ func main() {
 	mux.HandleFunc("/api/admin/users/delete", middleware.AdminOnly(adminHandler.DeleteUser))
 	mux.HandleFunc("/api/admin/users/edit", middleware.AdminOnly(adminHandler.EditUser))
 
+	mux.HandleFunc("/user-profile", handlers.ServeUserProfileHTML)
+	mux.HandleFunc("/api/user-profile/data", userHandler.UserData)
+	mux.HandleFunc("/api/user-profile/edit", userHandler.UserUpdate)
+	mux.HandleFunc("/api/user-profile/posts", userHandler.UserPosts)
+
 	// Регулярные HTML-страницы
 	mux.HandleFunc("/", handlers.ServeHTML)
 	mux.HandleFunc("/email", handlers.ServeEmailHTML)
+	mux.HandleFunc("/index", handlers.ServeIndexHTML)
+	
 
 	// Создание и настройка HTTP-сервера с тайм-аутами
 	port := os.Getenv("APP_PORT") // Render предоставляет эту переменную окружения
