@@ -3,6 +3,7 @@ package utils
 import (
 	"regexp"
 	"unicode"
+	"strings"
 )
 
 func IsAlpha(s string) bool {
@@ -15,6 +16,27 @@ func IsAlpha(s string) bool {
 }
 
 func IsValidEmail(email string) bool {
-	re := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	return re.MatchString(email)
+    // Регулярное выражение для базовой проверки email
+    re := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$`)
+    if !re.MatchString(email) {
+        return false
+    }
+
+    // Проверка на недопустимые символы (например, ".." в домене)
+    if strings.Contains(email, "..") {
+        return false
+    }
+
+    // Проверка на длину TLD (ограничим до 6 символов для большинства случаев)
+    parts := strings.Split(email, ".")
+    if len(parts) < 2 { // Если нет части TLD
+        return false
+    }
+
+    tld := parts[len(parts)-1]
+    if len(tld) > 6 {
+        return false
+    }
+
+    return true
 }
