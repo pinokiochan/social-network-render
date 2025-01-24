@@ -1,13 +1,13 @@
 package utils
 
 import (
+	"crypto/tls"
 	"fmt"
+	"github.com/jordan-wright/email"
 	"github.com/joho/godotenv"
 	"github.com/pinokiochan/social-network-render/internal/logger"
 	"github.com/sirupsen/logrus"
-	"net/smtp"
 	"os"
-	"github.com/jordan-wright/email"
 )
 
 func SendEmail(to, subject, body, attachmentPath string) error {
@@ -22,7 +22,7 @@ func SendEmail(to, subject, body, attachmentPath string) error {
 
 	// Извлечение SMTP настроек из окружения
 	smtpHost := os.Getenv("SMTP_HOST")
-	smtpPort := 2525 // Порт указан статически
+	smtpPort := 587 // Используем STARTTLS
 	smtpUser := os.Getenv("SMTP_USER")
 	smtpPass := os.Getenv("SMTP_PASS")
 
@@ -55,17 +55,14 @@ func SendEmail(to, subject, body, attachmentPath string) error {
 		}
 	}
 
-	// Логирование попытки отправки письма
-	logger.Log.WithFields(logrus.Fields{
-		"to":      to,
-		"subject": subject,
-		"from":    smtpUser,
-	}).Debug("Attempting to send email")
+	// Установка TLS-соединения
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: true,
+		ServerName:         smtpHost,
+	}
 
-	// Отправка письма
-	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
-	address := fmt.Sprintf("%s:%d", smtpHost, smtpPort) // Исправлено формирование адреса
-	err = e.Send(address, auth)
+	address := fmt.Sprintf("%s:%d", smtpHost, smtpPort)
+	err = e.SendWithTLS(address, smtp.PlainAuth("", smtpUser, smtpPass, smtpHost), tlsConfig)
 	if err != nil {
 		logger.Log.WithFields(logrus.Fields{
 			"error": err.Error(),
