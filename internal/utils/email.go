@@ -1,14 +1,17 @@
 package utils
 
 import (
-	"crypto/tls"
-	"fmt"
-	"github.com/jordan-wright/email"
-	"github.com/joho/godotenv"
-	"github.com/pinokiochan/social-network-render/internal/logger"
-	"github.com/sirupsen/logrus"
-	"os"
+    "crypto/tls"
+    "fmt"
+    "net/smtp"
+    "os"
+
+    "github.com/jordan-wright/email"
+    "github.com/joho/godotenv"
+    "github.com/pinokiochan/social-network-render/internal/logger"
+    "github.com/sirupsen/logrus"
 )
+
 
 func SendEmail(to, subject, body, attachmentPath string) error {
 	// Загрузка переменных окружения из .env файла
