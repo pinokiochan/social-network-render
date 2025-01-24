@@ -22,7 +22,7 @@ func SendEmail(to, subject, body, attachmentPath string) error {
 
 	// Извлечение SMTP настроек из окружения
 	smtpHost := os.Getenv("SMTP_HOST")
-	smtpPort := os.Getenv("SMTP_PORT")
+	smtpPort := 587
 	smtpUser := os.Getenv("SMTP_USER")
 	smtpPass := os.Getenv("SMTP_PASS")
 
