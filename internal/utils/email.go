@@ -1,37 +1,84 @@
-package util
+package utils
 
 import (
-  "fmt"
-  "gopkg.in/gomail.v2"
-  "log"
-  "os"
+	"fmt"
+	"github.com/joho/godotenv"
+	"github.com/pinokiochan/social-network-render/internal/logger"
+	"github.com/sirupsen/logrus"
+	"net/smtp"
+	"os"
+	"github.com/jordan-wright/email"
 )
 
-var (
-  smtpHost = os.Getenv("SMTP_HOST")
-  smtpPort = 587
-  smtpUser = os.Getenv("SMTP_USER")
-  smtpPass = os.Getenv("SMTP_PASS")
-)
+func SendEmail(to, subject, body, attachmentPath string) error {
+	// Загрузка переменных окружения из .env файла
+	err := godotenv.Load()
+	if err != nil {
+		logger.Log.WithFields(logrus.Fields{
+			"error": err.Error(),
+		}).Error("Failed to load .env file")
+		return fmt.Errorf("Error loading .env file: %v", err)
+	}
 
-// SendEmail sends an email with optional attachments
-func SendEmail(to, subject, body string, attachments []string) error {
-  m := gomail.NewMessage()
-  m.SetHeader("From", smtpUser)
-  m.SetHeader("To", to)
-  m.SetHeader("Subject", subject)
-  m.SetBody("text/plain", body)
+	// Извлечение SMTP настроек из окружения
+	smtpHost := os.Getenv("SMTP_HOST")
+	smtpPort := 587 // Порт указан статически
+	smtpUser := os.Getenv("SMTP_USER")
+	smtpPass := os.Getenv("SMTP_PASS")
 
-  // Attach files if provided
-  for _, file := range attachments {
-    m.Attach(file)
-  }
+	// Проверка наличия всех обязательных переменных окружения
+	if smtpHost == "" || smtpUser == "" || smtpPass == "" {
+		logger.Log.WithFields(logrus.Fields{
+			"host": smtpHost != "",
+			"port": smtpPort,
+			"user": smtpUser != "",
+		}).Error("Missing SMTP configuration")
+		return fmt.Errorf("SMTP configuration is missing in environment variables")
+	}
 
-  d := gomail.NewDialer(smtpHost, smtpPort, smtpUser, smtpPass)
+	// Создание нового письма
+	e := email.NewEmail()
+	e.From = smtpUser
+	e.To = []string{to}
+	e.Subject = subject
+	e.Text = []byte(body)
 
-  if err := d.DialAndSend(m); err != nil {
-    log.Println("Email send error:", err)
-    return err
-  }
-  return nil
+	// Прикрепление файла, если путь указан
+	if attachmentPath != "" {
+		_, err := e.AttachFile(attachmentPath)
+		if err != nil {
+			logger.Log.WithFields(logrus.Fields{
+				"error": err.Error(),
+				"path":  attachmentPath,
+			}).Error("Failed to attach file to email")
+			return fmt.Errorf("failed to attach file: %v", err)
+		}
+	}
+
+	// Логирование попытки отправки письма
+	logger.Log.WithFields(logrus.Fields{
+		"to":      to,
+		"subject": subject,
+		"from":    smtpUser,
+	}).Debug("Attempting to send email")
+
+	// Отправка письма
+	auth := smtp.PlainAuth("", smtpUser, smtpPass, smtpHost)
+	address := fmt.Sprintf("%s:%d", smtpHost, smtpPort) // Исправлено формирование адреса
+	err = e.Send(address, auth)
+	if err != nil {
+		logger.Log.WithFields(logrus.Fields{
+			"error": err.Error(),
+			"to":    to,
+		}).Error("Failed to send email")
+		return fmt.Errorf("failed to send email: %v", err)
+	}
+
+	// Логирование успешной отправки письма
+	logger.Log.WithFields(logrus.Fields{
+		"to":      to,
+		"subject": subject,
+	}).Info("Email sent successfully")
+
+	return nil
 }
