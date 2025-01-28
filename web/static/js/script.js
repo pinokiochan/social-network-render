@@ -55,7 +55,7 @@ async function getPosts(searchParams = {}) {
             div.classList.add('post');
             div.innerHTML = `
                 <strong>${post.username}</strong>: ${post.content}<br>
-                <small>Created: ${formatDate(post.created_at)}</small>
+                <small>${formatDate(post.created_at)}</small>
                 <div class="post-actions">
                     ${post.user_id === currentUser.id ? `
                         <button onclick="editPost(${post.id}, '${post.content.replace(/'/g, "\\'")}')" class="edit-btn">
@@ -66,6 +66,7 @@ async function getPosts(searchParams = {}) {
                         </button>
                     ` : ''}
                 </div>
+                <h3>Comments</h3>
                 <div id="comments-${post.id}" class="comments-section"></div>
                 <textarea id="comment-${post.id}" placeholder="Write a comment..."></textarea>
                 <button class="add-comment-btn" data-post-id="${post.id}">
@@ -120,6 +121,10 @@ async function createPost(event) {
     if (!token) {
         console.error('No token found');
         showAuthForms();
+        return;
+    }
+    if(!content){
+        alert('Please enter a post content.');
         return;
     }
 
